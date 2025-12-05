@@ -42,18 +42,35 @@ def puzzle(puzzle_data):
     
     return invalid_ids
 
+def puzzle_b(first_id, last_id):
+    invalid_ids = []
+
+    first_num = int(first_id)
+    last_num = int(last_id)
+
+    print(f"{first_num} length is {len(first_id)}")
+
+    return [0]
+
+
+def go_though_ids(puzzle_data):
+    invalid_ids = []
+    for id in puzzle_data:
+        first, last = id.split("-")
+        bad_ids = puzzle_b(first, last)
+    
         
 
 if __name__ == "__main__":
     print("Day 2 Advent Of Code 2025")
 
-    test_input = r"Day2\puzzle_input.txt"
+    test_input = r"Day2\test_puzzle_input.txt"
 
     puzzle_data = read_puzzle_data(test_input)
 
-    answer = puzzle(puzzle_data)
+    answer = go_though_ids(puzzle_data)
 
-    print(sum(answer))
+    
 
     # too Low 11277648113,
     #         16793817782 
