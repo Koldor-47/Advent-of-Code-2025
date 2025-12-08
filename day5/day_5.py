@@ -79,10 +79,11 @@ if __name__ == "__main__":
     count = 0
     print(f"the ingredients {len(ingredients)} and the fresh ids {len(the_fresh_ingredients)}")
     while count < len(the_fresh_ingredients):
-        for ingredient in range(len(ingredients)-1, 0, -1):
-            if ingredients[ingredient] in the_fresh_ingredients[count]:
+        for ingredient in ingredients:
+            if ingredient in the_fresh_ingredients[count]:
                 fresh += 1
-                ingredients.pop()
+                
+                
 
         count += 1
     
@@ -90,6 +91,9 @@ if __name__ == "__main__":
 
 
 # too Low 752 hmmmm
+# too low 753 hmmm
+
+# upper is 1000 
 
 
 
