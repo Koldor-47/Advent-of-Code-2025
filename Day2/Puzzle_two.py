@@ -116,7 +116,7 @@ def go_though_ids(puzzle_data):
 if __name__ == "__main__":
     print("Day 2 Advent Of Code 2025")
 
-    test_input = r"Day2/puzzle_input.txt"
+    test_input = r"day3/test_input.txt"
     puzzle_data = read_puzzle_data(test_input)
     answer = go_though_ids(puzzle_data)
 
