@@ -31,15 +31,21 @@ def find_moveable_rolls(the_diagram, part_b):
                     moveable_rolls += 1
                     moveable_rolls_spots.append((current_x, current_y))
     
-    print(moveable_rolls, end="")
-    print(f" {moveable_rolls_spots}")
-    print("--" * 10)
+    #print(moveable_rolls, end="")
+    #print(f" {moveable_rolls_spots}")
+    #print("--" * 10)
 
-    if part_b:
+    if not part_b:
+        return moveable_rolls
+    else:
         for loc in moveable_rolls_spots:
             the_diagram[loc[0]][loc[1]] = "."
     
-    return the_diagram
+        data = {
+            "moveable_rolls" : moveable_rolls,
+            "map" : the_diagram
+        }
+        return data
 
 def search_neigbours(paper_roll_x, paper_roll_y, map_size, the_map):
     #print(f"current position X: {paper_roll_x} Y: {paper_roll_y} on a {map_size[0]}X{map_size[1]} grid")
@@ -82,13 +88,20 @@ if __name__ == "__main__":
     TEST = r"Day4/test_puzzle_input.txt"
     REAL = r"Day4/puzzle_input.txt"
 
-    theMap = read_map(TEST)
+    theMap = read_map(REAL)
 
-    a = find_moveable_rolls(theMap, True)
+    a = find_moveable_rolls(theMap, False)
 
-    print(a)
+    rolls_moved = 0
+    last_move = 1
 
-
+    while last_move >= 1:
+        data = find_moveable_rolls(theMap, True)
+        last_move = data["moveable_rolls"]
+        rolls_moved += last_move
+        theMap = data["map"]
+    
+    print(rolls_moved)
 
 ###############
 #
