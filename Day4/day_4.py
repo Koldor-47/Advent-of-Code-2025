@@ -12,14 +12,14 @@ def read_map(file_path):
 
     return paper_roll_map
 
-def find_moveable_rolls(the_diagram):
+def find_moveable_rolls(the_diagram, part_b):
     moveable_rolls = 0
     current_x = 0
     current_y = 0
     max_cols = len(the_diagram[0])
     max_rows = len(the_diagram)
-
     map_size = (max_cols, max_rows)
+    moveable_rolls_spots = []
 
     for index_x, row in enumerate(the_diagram):
         current_x = index_x
@@ -29,8 +29,17 @@ def find_moveable_rolls(the_diagram):
                 num = search_neigbours(current_x, current_y, map_size, the_diagram)
                 if num < 4:
                     moveable_rolls += 1
+                    moveable_rolls_spots.append((current_x, current_y))
     
-    print(moveable_rolls)
+    print(moveable_rolls, end="")
+    print(f" {moveable_rolls_spots}")
+    print("--" * 10)
+
+    if part_b:
+        for loc in moveable_rolls_spots:
+            the_diagram[loc[0]][loc[1]] = "."
+    
+    return the_diagram
 
 def search_neigbours(paper_roll_x, paper_roll_y, map_size, the_map):
     #print(f"current position X: {paper_roll_x} Y: {paper_roll_y} on a {map_size[0]}X{map_size[1]} grid")
@@ -73,10 +82,11 @@ if __name__ == "__main__":
     TEST = r"Day4/test_puzzle_input.txt"
     REAL = r"Day4/puzzle_input.txt"
 
-    theMap = read_map(REAL)
+    theMap = read_map(TEST)
 
-    find_moveable_rolls(theMap)
+    a = find_moveable_rolls(theMap, True)
 
+    print(a)
 
 
 
