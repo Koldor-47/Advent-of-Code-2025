@@ -45,9 +45,11 @@ def make_fresh(fresh_ranges):
                     low = current_low
                 elif low > current_low:
                     low = current_low
-                if high < next_high:
-                    high = next_high
+                if high < current_high:
+                    high = current_high
             elif low is not None and high is not None:
+                if high < current_high:
+                    high = current_high
                 new_fresh_ranges.append(range(low, high+1))
                 low = None
                 high = 0
@@ -56,6 +58,10 @@ def make_fresh(fresh_ranges):
 
         if index + 1 == len(sorted_ranges):
             if low is not None:
+                if r[0] < low:
+                    low = r[0]
+                if r[1] > high:
+                    high = r[1]
                 new_fresh_ranges.append(range(low, high+1))
             elif low is None:
                 new_fresh_ranges.append(range(r[0], r[1]+1))
@@ -83,7 +89,7 @@ if __name__ == "__main__":
 
     data = read_ingredient_db(REAL)
 
-    the_fresh_ranges = make_fresh_two(data["fresh_ranges"])
+    the_fresh_ranges = make_fresh(data["fresh_ranges"])
     ingredients = sorted(data["ingredients"], reverse=True)
     fresh = []
     count = 0
@@ -98,15 +104,20 @@ if __name__ == "__main__":
             
             ingredients_left -= 1
                 
-                    
-
         count += 1
     
     print(f"There are {len(fresh)} fresh ingrendients")
 
     print(f"the current length of the ingredients is {len(ingredients)}")
 
-    print(len(set(fresh)))
+    total = 0
+
+    for i in the_fresh_ranges:
+        total += len(i)
+    
+    print(total)
+
+    print(the_fresh_ranges)
 
 
 # Answer 782
@@ -117,4 +128,9 @@ if __name__ == "__main__":
 # not right 781 < used_fresh_two
 # not Right 955 <- used make_fresh_two
 # upper is 1000 
+
+# part b 341056515036487 <-- Too Low
+
+#        part B answer ---> 353863745078671
+# partb 445171204094492 <-- Too High
 
