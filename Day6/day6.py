@@ -65,7 +65,7 @@ def check_math_partB(math_book, number_questions):
     }
     for row, nums in zip(math_book["numbers"], numbers.keys()):
         numbers[nums] = row
-
+        new_numbers = []
     for the_first, the_second, the_third in zip(numbers["first"], numbers["second"], numbers["last"]):
         new_num = [the_first, the_second, the_third]
         the_new_number = []
@@ -73,7 +73,10 @@ def check_math_partB(math_book, number_questions):
             if num:
                 the_new_number.append(num)
         
-        print("".join(the_new_number))
+        if "".join(the_new_number).strip().isdigit():
+            new_numbers.append(int("".join(the_new_number)))
+    
+    print(new_numbers)
         
 if __name__ == "__main__":
     print("day 6 Advent of Code")
