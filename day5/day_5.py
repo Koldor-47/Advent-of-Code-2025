@@ -65,35 +65,56 @@ def make_fresh(fresh_ranges):
     return new_fresh_ranges
 
 
+def make_fresh_two(fresh_ranges):
+    big_range = []
+    for fresh_range in fresh_ranges:
+        big_range.append(range(fresh_range[0], (fresh_range[1] + 1)))
+    
+    return big_range
+        
+
+
+
 
 if __name__ == "__main__":
     print("Solving Day 5 AOC 2025")
     TEST = r"day5/test_input.txt"
     REAL = r"day5/puzzle_input.txt"
 
-    data = read_ingredient_db(TEST)
+    data = read_ingredient_db(REAL)
 
-    the_fresh_ingredients = make_fresh(data["fresh_ranges"])
+    the_fresh_ranges = make_fresh_two(data["fresh_ranges"])
     ingredients = sorted(data["ingredients"], reverse=True)
-    fresh = 0
+    fresh = []
     count = 0
-    print(f"the ingredients {len(ingredients)} and the fresh ids {len(the_fresh_ingredients)}")
-    while count < len(the_fresh_ingredients):
-        for ingredient in ingredients:
-            if ingredient in the_fresh_ingredients[count]:
-                fresh += 1
+    print(f"there are {len(ingredients)} ingredients and there are fresh ids {len(the_fresh_ranges)}")
+    
+    while count < len(the_fresh_ranges):
+        ingredients_left = len(ingredients)
+        while ingredients_left >= 0:
+            if ingredients[ingredients_left-1] in the_fresh_ranges[count]:
+                fresh.append(ingredients[ingredients_left-1])
+                ingredients.pop(ingredients_left-1)
+            
+            ingredients_left -= 1
                 
-                
+                    
 
         count += 1
     
-    print(fresh)
+    print(f"There are {len(fresh)} fresh ingrendients")
 
+    print(f"the current length of the ingredients is {len(ingredients)}")
+
+    print(len(set(fresh)))
+
+
+# Answer 782
 
 # too Low 752 hmmmm
 # too low 753 hmmm
 
+# not right 781 < used_fresh_two
+# not Right 955 <- used make_fresh_two
 # upper is 1000 
-
-
 
