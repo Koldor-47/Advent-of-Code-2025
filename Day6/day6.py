@@ -5,7 +5,7 @@ from itertools import zip_longest
 
 def read_homework(file_path):
     numbers = []
-    math_lines = 3
+    math_lines = 4
     instructions_line = -1 # last line
     instructions = []
 
@@ -58,25 +58,42 @@ def check_maths(maths_book, number_questions):
 
 def check_math_partB(math_book, number_questions):
     total = []
-    numbers = {
-        "first" : [],
-        "second" : [],
-        "last" : []
-    }
-    for row, nums in zip(math_book["numbers"], numbers.keys()):
-        numbers[nums] = row
-        new_numbers = []
-    for the_first, the_second, the_third in zip(numbers["first"], numbers["second"], numbers["last"]):
-        new_num = [the_first, the_second, the_third]
-        the_new_number = []
-        for num in new_num:
-            if num:
-                the_new_number.append(num)
-        
-        if "".join(the_new_number).strip().isdigit():
-            new_numbers.append(int("".join(the_new_number)))
+
+    right_to_left_math = re_sort_numbers(math_book["numbers"])
+
+    for math_problem, instruction in zip(right_to_left_math, math_book["instructions"]):
+        if instruction == "*":
+            answer = math.prod(math_problem)
+        elif instruction == "+":
+            answer = sum(math_problem)
     
-    print(new_numbers)
+        total.append(answer)
+    
+    return total
+    
+
+
+def re_sort_numbers(numbers):
+    split_numbers = []
+    for num in numbers:
+        the_num = list(num)
+        split_numbers.append(the_num)
+
+    step_too_numbers = []
+    math_problem = []
+    for item in zip(*split_numbers):
+        str_num = "".join(item)
+        if not str_num.isspace():
+            math_problem.append(int(str_num))
+        elif str_num.isspace():
+            step_too_numbers.append(math_problem)
+            math_problem = []
+    # adds the last item
+    step_too_numbers.append(math_problem)
+    
+    return step_too_numbers
+
+
         
 if __name__ == "__main__":
     print("day 6 Advent of Code")
@@ -84,13 +101,15 @@ if __name__ == "__main__":
     TEST = r"Day6/test_input.txt"
     REAL = r"Day6/puzzle_input.txt"
 
-    maths_book = read_homework(TEST)
+    maths_book = read_homework(REAL)
 
     maths_book["real_numbers"] = str_to_int(maths_book["numbers"])
 
     #part_a = check_maths(maths_book, 4)
     part_b = check_math_partB(maths_book, 4)
-    print(part_b)
+
+    print(sum(part_b))
+    
 
 
 # too Low 19745445035
