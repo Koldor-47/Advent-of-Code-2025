@@ -59,6 +59,70 @@ def found_splitter(row, col, max_rows, max_cols, laser_beams):
     return new_beams
 
 
+class Laser_beam:
+    def __init__(self, value):
+        self.value = value
+        self.children = []
+        self.split_left = 0
+        self.split_right = 0
+    
+    def __repr__(self):
+        return f"laser Node at {self.value}"
+    
+the_tachyon_manifold = {}
+
+
+def check_next(node, the_drawing):
+    next_spliter = []
+    for direction in [node.split_left, node.split_right]:
+        for down_num in range(node.value[0], the_drawing["Max_cols"]):
+            going_down = the_drawing['diagram'][down_num][direction]
+            if going_down == "^":
+                found_next = down_num
+                next_spliter.append((found_next, direction))
+                break
+    
+    
+    return next_spliter
+
+
+def get_manifold_data(the_drawing):
+    for r_index, row in enumerate(the_drawing["diagram"]):
+        for c_index, col in enumerate(row):
+            if col == "^":
+                the_tachyon_manifold[(r_index, c_index)] = Laser_beam((r_index, c_index))
+                the_tachyon_manifold[(r_index, c_index)].split_left = c_index - 1
+                the_tachyon_manifold[(r_index, c_index)].split_right = c_index + 1
+    
+    for (r_index, c_index), node in the_tachyon_manifold.items():
+        next_ones = check_next(node, the_drawing)
+
+        for n_one in next_ones:
+            if n_one in the_tachyon_manifold:
+                the_tachyon_manifold[r_index, c_index].children.append(the_tachyon_manifold[n_one])
+
+    print("done !")
+
+def get_paths(tachyon_pos, travelled):
+    travelled.append(tachyon_pos)
+
+    if len(tachyon_pos.children) < 1:
+        #print(travelled)
+        travelled.pop()
+        # return 2 to count the last split
+        return 2
+    
+    total = 0
+    if len(tachyon_pos.children) == 1:
+        total += 1
+        total += get_paths(tachyon_pos.children[0], travelled)
+    else:
+        for laser in tachyon_pos.children:
+            total += get_paths(laser, travelled)
+        
+    travelled.pop()
+    return total
+
 if __name__ == "__main__":
     print("Advent of Code 2025 Day 7")
 
@@ -67,4 +131,10 @@ if __name__ == "__main__":
 
     diagram = read_diagram(REAL)
 
-    look_for_splitters(diagram)
+    #look_for_splitters(diagram)
+
+    get_manifold_data(diagram)
+    
+    total = get_paths(the_tachyon_manifold[(2,70)], [])
+
+    print(total)
