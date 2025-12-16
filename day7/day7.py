@@ -1,4 +1,6 @@
 # day 7 Advent of Code
+from functools import lru_cache
+
 def read_diagram(file_path):
     tachyon_manifold ={
         "Max_rows" : 0,
@@ -93,7 +95,7 @@ def get_manifold_data(the_drawing):
                 the_tachyon_manifold[(r_index, c_index)] = Laser_beam((r_index, c_index))
                 the_tachyon_manifold[(r_index, c_index)].split_left = c_index - 1
                 the_tachyon_manifold[(r_index, c_index)].split_right = c_index + 1
-    
+    print("finished looking for splits")
     for (r_index, c_index), node in the_tachyon_manifold.items():
         next_ones = check_next(node, the_drawing)
 
@@ -103,24 +105,23 @@ def get_manifold_data(the_drawing):
 
     print("done !")
 
-def get_paths(tachyon_pos, travelled):
-    travelled.append(tachyon_pos)
+
+@lru_cache(maxsize=None)
+def get_paths(tachyon_pos):
 
     if len(tachyon_pos.children) < 1:
         #print(travelled)
-        travelled.pop()
         # return 2 to count the last split
         return 2
     
     total = 0
     if len(tachyon_pos.children) == 1:
         total += 1
-        total += get_paths(tachyon_pos.children[0], travelled)
+        total += get_paths(tachyon_pos.children[0])
     else:
         for laser in tachyon_pos.children:
-            total += get_paths(laser, travelled)
+            total += get_paths(laser)
         
-    travelled.pop()
     return total
 
 if __name__ == "__main__":
@@ -135,6 +136,6 @@ if __name__ == "__main__":
 
     get_manifold_data(diagram)
     
-    total = get_paths(the_tachyon_manifold[(2,70)], [])
+    total = get_paths(the_tachyon_manifold[(2,70)])
 
     print(total)
